@@ -1,0 +1,25 @@
+{
+  "name": "bjdrint",
+  "version": "1.0.1",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "vitest"
+  },
+  "license": "ISC",
+  "bin": {
+    "bj": "./bin/bj.js"
+  },
+  "description": "Juego de Blackjack para consola hecho en Node.js",
+  "keywords": [
+    "blackjack",
+    "consola",
+    "juego",
+    "nodejs",
+    "cartas"
+  ],
+  "author": "Drint",
+  "devDependencies": {
+    "vitest": "^3.2.4"
+  }
+}
