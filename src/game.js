@@ -72,14 +72,48 @@ class Game {
     return this.dealer.getHandValue() > 21;
   }
 
+  isPlayerBlackjack() {
+    return this.player.hand.length === 2 && this.player.getHandValue() === 21;
+  }
+
+  isDealerBlackjack() {
+    return this.dealer.hand.length === 2 && this.dealer.getHandValue() === 21;
+  }
+
   getResult() {
     const playerValue = this.player.getHandValue();
     const dealerValue = this.dealer.getHandValue();
+
+    const playerBJ = this.isPlayerBlackjack();
+    const dealerBJ = this.isDealerBlackjack();
+
+    if (playerBJ && dealerBJ) return 'Empate.';
+    if (playerBJ) return '¡Blackjack! ¡Ganas!';
+    if (dealerBJ) return 'El crupier tiene Blackjack. Pierdes.';
+
     if (playerValue > 21) return '¡Te pasaste! Pierdes.';
     if (dealerValue > 21) return '¡El crupier se pasó! ¡Ganas!';
     if (playerValue > dealerValue) return '¡Ganas!';
     if (playerValue < dealerValue) return 'Pierdes.';
     return 'Empate.';
+  }
+
+  calculatePayout(bet) {
+    const playerBJ = this.isPlayerBlackjack();
+    const dealerBJ = this.isDealerBlackjack();
+
+    if (playerBJ && dealerBJ) return 0;
+    if (playerBJ) return bet * 1.5;
+    if (dealerBJ) return -bet;
+
+    const playerValue = this.player.getHandValue();
+    const dealerValue = this.dealer.getHandValue();
+
+    if (playerValue > 21) return -bet;
+    if (dealerValue > 21) return bet;
+    if (playerValue > dealerValue) return bet;
+    if (playerValue < dealerValue) return -bet;
+    return 0;
   }
 }
 

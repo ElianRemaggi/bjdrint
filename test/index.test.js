@@ -13,4 +13,13 @@ describe('index.js', () => {
     const content = fs.readFileSync(filePath, 'utf-8');
     expect(content).toMatch(/main\(\)/);
   });
+});
+
+describe('Game API', () => {
+  it('debe exponer calculatePayout(bet)', async () => {
+    const Game = (await import('../src/game.js')).default || (await import('../src/game.js'));
+    const G = Game.default || Game;
+    const g = new G();
+    expect(typeof g.calculatePayout).toBe('function');
+  });
 }); 

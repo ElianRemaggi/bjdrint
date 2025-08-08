@@ -61,4 +61,21 @@ describe('Game', () => {
     ];
     expect(game.getResult()).toMatch(/¡Ganas/);
   });
+
+  it('paga 3:2 si el jugador obtiene blackjack natural', () => {
+    // Blackjack natural del jugador: A + 10
+    game.player.hand = [
+      { rank: 'A', suit: '♠', value: 11 },
+      { rank: 'K', suit: '♥', value: 10 }
+    ];
+    // Dealer no blackjack
+    game.dealer.hand = [
+      { rank: '9', suit: '♠', value: 9 },
+      { rank: '8', suit: '♥', value: 8 }
+    ];
+    const apuesta = 100;
+    expect(game.isPlayerBlackjack()).toBe(true);
+    expect(game.calculatePayout(apuesta)).toBe(150);
+    expect(game.getResult()).toMatch(/Blackjack/);
+  });
 }); 
