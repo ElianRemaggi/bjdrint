@@ -17,9 +17,9 @@ async function main() {
   let saldo = 0;
   while (true) {
     const inputSaldo = await preguntar('¿Con cuántos dólares quieres comenzar? ');
-    saldo = parseInt(inputSaldo);
-    if (!isNaN(saldo) && saldo > 0 && Number.isInteger(saldo)) break;
-    console.log('Por favor, ingresa un número entero válido mayor a 0.');
+    saldo = parseFloat(inputSaldo);
+    if (!isNaN(saldo) && saldo > 0) break;
+    console.log('Por favor, ingresa un número válido mayor a 0.');
   }
   let jugar = true;
   let apuestaSiguiente = null;
@@ -35,10 +35,10 @@ async function main() {
       console.log(`\nApuesta automática: $${apuesta}`);
     } else {
       while (true) {
-        const inputApuesta = await preguntar(`\nTienes $${saldo}. ¿Cuánto quieres apostar? `);
-        apuesta = parseInt(inputApuesta);
-        if (!isNaN(apuesta) && apuesta > 0 && apuesta <= saldo && Number.isInteger(apuesta)) break;
-        console.log('Apuesta inválida. Debe ser un número entero mayor a 0 y menor o igual a tu saldo.');
+        const inputApuesta = await preguntar(`\nTienes $${saldo.toFixed(2)}. ¿Cuánto quieres apostar? `);
+        apuesta = parseFloat(inputApuesta);
+        if (!isNaN(apuesta) && apuesta > 0 && apuesta <= saldo) break;
+        console.log('Apuesta inválida. Debe ser un número mayor a 0 y menor o igual a tu saldo.');
       }
     }
     while (turnoJugador) {
@@ -72,16 +72,18 @@ async function main() {
     console.log(`Cartas del crupier: ${game.dealer.showHand(false)} (Total: ${game.getDealerValue(false)})`);
     const resultado = game.getResult();
     console.log(resultado);
-    // Ajustar saldo
-    if (resultado.includes('Ganas')) {
-      saldo += apuesta;
-      console.log(`¡Ganaste $${apuesta}! Tu saldo es $${saldo}.`);
-    } else if (resultado.includes('Pierdes')) {
-      saldo -= apuesta;
-      console.log(`Perdiste $${apuesta}. Tu saldo es $${saldo}.`);
+
+    // Ajustar saldo usando payout (incluye blackjack 3:2)
+    const neto = game.calculatePayout(apuesta);
+    saldo += neto;
+    if (neto > 0) {
+      console.log(`¡Ganaste $${neto.toFixed(2)}! Tu saldo es $${saldo.toFixed(2)}.`);
+    } else if (neto < 0) {
+      console.log(`Perdiste $${Math.abs(neto).toFixed(2)}. Tu saldo es $${saldo.toFixed(2)}.`);
     } else {
-      console.log(`Empate. Tu saldo es $${saldo}.`);
+      console.log(`Empate. Tu saldo es $${saldo.toFixed(2)}.`);
     }
+
     if (saldo <= 0) {
       console.log('¡Te has quedado sin dinero!');
       break;
@@ -94,8 +96,8 @@ async function main() {
       jugar = false;
     } else {
       // Si es un número válido y posible como apuesta, lo toma como apuesta automática
-      const monto = parseInt(otra);
-      if (!isNaN(monto) && monto > 0 && monto <= saldo && Number.isInteger(monto)) {
+      const monto = parseFloat(otra);
+      if (!isNaN(monto) && monto > 0 && monto <= saldo) {
         apuestaSiguiente = monto;
         jugar = true;
       } else {
