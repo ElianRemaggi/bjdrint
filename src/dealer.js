@@ -15,4 +15,4 @@ class Dealer extends Player {
   // showHand ya hereda el de Player, que ahora soporta colores
 }
 
-module.exports = Dealer; 
+export default Dealer; 

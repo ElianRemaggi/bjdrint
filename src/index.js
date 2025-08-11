@@ -1,7 +1,7 @@
 // index.js
 
-const readline = require('readline');
-const Game = require('./game');
+import readline from 'readline';
+import Game from './game.js';
 
 const rl = readline.createInterface({
   input: process.stdin,
